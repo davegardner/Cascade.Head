@@ -1,0 +1,73 @@
+﻿
+/*body.modal-open {*/
+#metaElementsNs {
+
+    @import "Lib/Bootstrap/bootstrap.less";
+    /*ul {
+        list-style: disc !important;
+        padding: 40px !important;
+
+        li {
+            padding: 0 !important;
+        }
+    }*/
+    .green {
+        color: rgba(128, 159, 67, 1.0);
+    }
+
+    .selection {
+        cursor: pointer;
+        .green();
+    }
+    
+    @select-editable-width: 220px;
+
+    .select-editable {
+        position: relative;
+        background-color: white;
+        border: 1px solid #bdbcbc;
+        width: (@select-editable-width + 2);
+        height: 25px;
+        display: inline-block;
+        margin-bottom: -4px;
+
+
+        select {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            font-size: 14px;
+            border: none;
+            width: @select-editable-width;
+            margin: 0;
+        }
+
+        input {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: (@select-editable-width - 20);
+            padding: 1px;
+            font-size: 14px;
+            border: none;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+        }
+    }
+
+    #elementContent{ width: 100%;}
+
+    table.head {
+        width: 100%;
+
+        td:nth-child(1) {
+            width: 8em;
+        }
+
+        td {
+            padding: 4px 0;
+        }
+    }
+}

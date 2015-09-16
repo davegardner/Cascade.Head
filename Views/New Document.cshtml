@@ -1,0 +1,43 @@
+﻿@using Orchard.ContentManagement;
+@using Cascade.Bootstrap.Models;
+@using System.Globalization;
+@using Cascade.Head.Services;
+@{
+    var settings = WorkContext.CurrentSite.As<BootstrapThemeSettingsPart>();
+    var cultureInfo = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+
+    string title = Convert.ToString(Model.Title);
+    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
+
+    IPageTitleService pageTitleService = new PageTitleService(WorkContext);
+    string PageTitle = pageTitleService.GetPageTitle();
+
+    Display.Resources();
+}
+
+<!DOCTYPE html>
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage() @(settings.UseFluidLayout ? "fluid-layout" : "boxed-layout") @(settings.UseFixedNav ? "fixed-nav" : "floating-nav") @(settings.UseStickyFooter ? "sticky-footer" : string.Empty) @(cultureInfo.TextInfo.IsRightToLeft ? "rtl" : string.Empty)">
+
+<head>
+
+
+    @* If you want to set either or both of these from within Orchard Admin using Cascade.Head
+        then comment the following lines as appropriate:
+        <meta charset="utf-8" />
+        <meta name="robots" content="index, follow, archive" />
+        <title>@Html.Title(title, siteName)</title>*@
+
+    <title>@PageTitle</title>
+
+    @Display(Model.Head)
+
+    <script type="text/javascript">
+        (function (d) { d.className = "dyn" + d.className.substring(6, d.className.length); })(document.documentElement);
+    </script>
+</head>
+
+<body class="theme-@WorkContext.CurrentTheme.Id">
+    @Display(Model.Body)
+    @Display(Model.Tail)
+</body>
+</html>

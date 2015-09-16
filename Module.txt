@@ -1,0 +1,10 @@
+﻿Name: Cascade.Head
+AntiForgery: enabled
+Author: Cascade Pixels
+Website: http://cascadepixels.com.au
+Version: 0.9
+OrchardVersion: 1.9
+Description: Define HTML head region elements such as meta and http-equiv tags
+Features:
+    Cascade.Head:
+        Description: Define HTML head region elements such as meta and http-equiv tags
