@@ -95,7 +95,7 @@
 		currentRow = a.closest('tr')
 		index = $('#elementTable tbody tr').index(currentRow);
 
-		var input = currentRow.find('input[name="Head.Elements[' + index + '].Deleted"]');
+		var input = currentRow.find('input[name="' + fieldNameBase + '[' + index + '].Deleted"]');
 		input.val(true);
 
 		currentRow.attr('hidden', true);
@@ -121,27 +121,27 @@
 			currentRow.empty();
 		}
 
-		var id = $('#myModal input[name="id"]').val();
-		id += '<input type="hidden" name="Head.Elements[' + index + '].Id" value="' + id + '" />'
+		var id = $('#myModal input[name="id"]').val() | "0";
+		id += '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Id" value="' + id + '" />'
 
-		var headId = $('#Head_Id').val();
-		headId = '<input type="hidden" name="Head.Elements[' + index + '].HeadPartRecord_Id" value="' + headId + '" />'
+		var headId = $('#Head_Id').val() | "0";
+		headId = '<input type="hidden" name="' + fieldNameBase + '[' + index + '].HeadPartRecord_Id" value="' + headId + '" />'
 
 		var type = $('#heType').val();
-		type += '<input type="hidden" name="Head.Elements[' + index + '].Type" value="' + type + '" />'
+		type += '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Type" value="' + type + '" />'
 
 		var name = $('#heName').val();
-		name += '<input type="hidden" name="Head.Elements[' + index + '].Name" value="' + name + '" />'
+		name += '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Name" value="' + name + '" />'
 
 		var content = $('#myModal input[name="content"]').val();
-		content += '<input type="hidden" name="Head.Elements[' + index + '].Content" value="' + content + '" />'
+		content += '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Content" value="' + content + '" />'
 
-		var deleted = '<input type="hidden" name="Head.Elements[' + index + '].Deleted" value="false" />'
+		var deleted = '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Deleted" value="false" />'
 
 
 		var actions = '<a href="#" class="elementEdit" >Edit</a> | <a href="#" class="elementDelete" >Delete</a>';
 
-		currentRow.append("<td>" + id + headId + deleted + "</td><td>" + type + "</td><td>" + name + "</td><td>" + content + "</td><td>" + actions + "</td>");
+		currentRow.append("<td class='hidden'>" + id + headId + deleted + "</td><td>" + type + "</td><td>" + name + "</td><td>" + content + "</td><td>" + actions + "</td>");
 		$('#myModal input').attr('disabled', true);
 		$('#myModal').modal('hide');
 	}

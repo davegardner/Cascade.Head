@@ -1,6 +1,5 @@
-﻿@model Cascade.Head.ViewModels.HeadVM
-@using Orchard.Core.Shapes
-@using Orchard.ContentManagement
+﻿@using Cascade.Head.Settings
+@model Cascade.Head.Settings.HeadTypePartSettings
 
 @{
     Script.Require("WebComponentsLite").AtHead();
@@ -8,23 +7,17 @@
     Script.Require("Bootstrap");
     Script.Require("Head");
 
-    //RegisterLink(new Orchard.UI.Resources.LinkEntry { Rel = "import", Href = Url.Content("~/Modules/Cascade.Head/Contents/Components/cascade-editable-dropdown.html") });
-    //RegisterLink(new Orchard.UI.Resources.LinkEntry { Rel = "import", Href = Url.Content("~/Modules/Cascade.Head/Contents/bower_components/iron-dropdown/iron-dropdown.html") });
-    //RegisterLink(new Orchard.UI.Resources.LinkEntry { Rel = "import", Href = Url.Content("~/Modules/Cascade.Head/Contents/bower_components/paper-button/paper-button.html") });
-
-    var elements = Model.Elements;
-
     var fieldNameBase = Html.FieldNameFor(m => Model.Elements);
+
 }
 <script>
     // yeah it's a global
     var fieldNameBase = '@fieldNameBase';
 </script>
 
+
 <!--This wrapper is a css 'namespace'-->
 <div id="metaElementsNs">
-
-    <h2>Head Elements</h2>
 
     <!-- modal dialog -->
     <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -98,17 +91,14 @@
 
 
     <fieldset>
-
-        @Html.HiddenFor(m => m.Id)
-
         <table id="elementTable" class="items">
             <caption>
-                The html head tags shown here will be included in all pages in which this content appears.
+                The html head tags shown here will be included in all pages in which this content type appears.
                 <div class="manage"><a id="createHeadElement" class="button primaryAction">Add a new head element</a></div>
             </caption>
             <thead>
                 <tr>
-                    <th scope="col" class="hidden">@T("Id")</th>
+                    <th class="hidden" scope="col">@T("Id")</th>
                     <th scope="col">@T("Type")</th>
                     <th scope="col">@T("Name")</th>
                     <th scope="col">@T("Content")</th>
@@ -116,31 +106,36 @@
                 </tr>
             </thead>
             <tbody>
-                @for (int index = 0; index < elements.Count; ++index)
+                @for (int index = 0; index < Model.Elements.Count; ++index)
                 {
-                    var element = elements[index];
+                    var element = Model.Elements[index];
                     <tr>
+
                         <td class="hidden">
-                            <!--entry.Id-->
-                            @element.Id
+                            @*@element.Id
+                            *@
                             <input type="hidden" name="@(fieldNameBase)[@index].Id" value="@element.Id" />
-                            <input type="hidden" name="@(fieldNameBase)[@index].HeadPartRecord_Id" value="@element.HeadPartRecord_Id" />
+                            <input type="hidden" name="@(fieldNameBase)[@index].HeadPartRecord_Id" value="@element.HeadPartRecord_Id" /> 
                             <input type="hidden" name="@(fieldNameBase)[@index].Deleted" value="false" />
                         </td>
+
                         <td>
                             <!--entry.Type-->
                             @element.Type
-                            <input type="hidden" name="@(fieldNameBase)[@index].Type" value="@element.Type" />
+                            @{
+                    var f1 = fieldNameBase + "[" + index + "].Type";
+                            }
+                            <input type="hidden" name="@(fieldNameBase)[@(index)].Type" value="@element.Type" />
                         </td>
                         <td>
                             <!--entry.Name-->
                             @element.Name
-                            <input type="hidden" name="@(fieldNameBase)[@index].Name" value="@element.Name" />
+                            <input type="hidden" name="@(fieldNameBase)[@(index)].Name" value="@element.Name" />
                         </td>
                         <td>
                             <!--entry.Content-->
                             @element.Content
-                            <input type="hidden" name="@(fieldNameBase)[@index].Content" value="@element.Content" />
+                            <input type="hidden" name="@(fieldNameBase)[@(index)].Content" value="@element.Content" />
                         </td>
                         <!--actions-->
                         <td class="action">
