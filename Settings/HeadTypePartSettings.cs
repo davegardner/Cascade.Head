@@ -24,6 +24,11 @@ namespace Cascade.Head.Settings
         private const char FieldBreak = '\t';
         private const char RecordBreak = '\r';
 
+        public HeadTypePartSettings()
+        {
+            Elements = new List<Element>();
+        }
+
         public List<Element> Elements { get; set; }
 
 
@@ -69,5 +74,6 @@ namespace Cascade.Head.Settings
                 Elements = elements;
             }
         }
+
     }
 }

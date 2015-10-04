@@ -19,7 +19,11 @@ namespace Cascade.Head.Settings
             //var model = definition.Settings.GetModel<HeadTypePartSettings>();
 
             // but this is what I found works:
-            model.RawElements = definition.Settings["HeadTypePartSettings.RawElements"];
+            try
+            {
+                model.RawElements = definition.Settings["HeadTypePartSettings.RawElements"];
+            }
+            catch { }
 
             yield return DefinitionTemplate(model);
         }
