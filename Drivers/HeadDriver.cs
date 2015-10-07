@@ -21,14 +21,15 @@ namespace Cascade.Head.Drivers
 
         private readonly IHeadServices _headServices;
         private readonly IContentManager _contentManager;
-        private readonly IWorkContextAccessor _wca;
+        //private readonly IWorkContextAccessor _wca;
 
         public HeadPartDriver(
             IHeadServices commentService,
-            IContentManager contentManager,
-            IWorkContextAccessor wca)
+            IContentManager contentManager //,
+            //IWorkContextAccessor wca
+            )
         {
-            _wca = wca;
+            //_wca = wca;
             _headServices = commentService;
             _contentManager = contentManager;
         }
@@ -38,12 +39,15 @@ namespace Cascade.Head.Drivers
         protected override DriverResult Display(HeadPart part, string displayType, dynamic shapeHelper)
         {
             if (displayType != "Detail") return null;
-            var resourceManager = _wca.GetContext().Resolve<IResourceManager>();
+            //var resourceManager = _wca.GetContext().Resolve<IResourceManager>();
 
             // Merge content-level elements with type-level elements
             var allElements = new List<HeadElementRecord>(part.Elements);
             
-            // The line below is how you're supposed to do it, but it did not work for me
+            if (part == null || part.Settings == null)
+                return null;
+
+            // The commented-out line below is how you're supposed to do it, but it did not work for me
             // so I access the settings collection directly instead.
             //var typeSettings = part.Settings.GetModel<HeadTypePartSettings>();
             var raw = part.Settings["HeadTypePartSettings.RawElements"];
@@ -52,44 +56,8 @@ namespace Cascade.Head.Drivers
             var typeElements = typeSettings.Elements.Select(e => new HeadElementRecord { Type = e.Type, Content = e.Content, Name = e.Name });
             allElements.AddRange(typeElements);
 
-            foreach (var element in allElements)
-            {
-                switch (element.Type.ToLower())
-                {
-                    case "title":
-                        HttpContext.Current.Cache.Insert("Cascade.Head.PageTitle", element.Content ?? "");
-                        break;
-                    case "name":
-                        resourceManager.SetMeta(new MetaEntry
-                        {
-                            Name = element.Name,
-                            Content = element.Content,
-
-                        });
-                        break;
-                    case "http-equiv":
-                        resourceManager.SetMeta(new MetaEntry
-                        {
-                            HttpEquiv = element.Name,
-                            Content = element.Content
-                        });
-                        break;
-                    case "charset":
-                        resourceManager.SetMeta(new MetaEntry
-                        {
-                            Charset = element.Content
-                        });
-                        break;
-                    case "link":
-                        resourceManager.RegisterLink(new LinkEntry
-                        {
-                            Rel = element.Name,
-                            Type = GetType(element.Content),
-                            Href = element.Content
-                        });
-                        break;
-                }
-            }
+            _headServices.WriteElements(allElements);
+            
             return null;
         }
 
@@ -127,18 +95,7 @@ namespace Cascade.Head.Drivers
         }
 
 
-        private string GetType(string content)
-        {
-            // Approximation that will work for common extensions png and ico
-            string type = "image";
-            var ext = Path.GetExtension(content);
-            if(!string.IsNullOrEmpty(ext))
-            {
-                type += "/" + ext.TrimStart('.');
-            }
-            return type;
-        }
-
+        
         protected override void Importing(HeadPart part, ImportContentContext context)
         {
 

@@ -4,25 +4,25 @@ using System.Web;
 
 namespace Cascade.Head.Services
 {
-    public interface IPageTitleService : IDependency
+    public interface IPageHeadService : IDependency
     {
         string GetPageTitle();
     }
 
-    public class PageTitleService : IPageTitleService
+    public class PageHeadService : IPageHeadService
     {
         private readonly IWorkContextAccessor _wca;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
 
-        public PageTitleService(IWorkContextAccessor wca, ICacheManager cacheManager, ISignals signals)
+        public PageHeadService(IWorkContextAccessor wca, ICacheManager cacheManager, ISignals signals)
         {
             _wca = wca;
             _cacheManager = cacheManager;
             _signals = signals;
         }
 
-        public PageTitleService(WorkContext workContext)
+        public PageHeadService(WorkContext workContext)
         {
             _wca = workContext.Resolve<IWorkContextAccessor>();
             _cacheManager = new DefaultCacheManager(this.GetType(), new DefaultCacheHolder(new DefaultCacheContextAccessor()));

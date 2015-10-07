@@ -1,16 +1,25 @@
-﻿@using Orchard.ContentManagement;
+﻿@using Cascade.Head.Models;
+@using Cascade.Head.Services;
+@using Orchard.ContentManagement;
 @using Cascade.Bootstrap.Models;
 @using System.Globalization;
 @using Cascade.Head.Services;
 @{
     var settings = WorkContext.CurrentSite.As<BootstrapThemeSettingsPart>();
+
+    var headSettings = WorkContext.CurrentSite.As<HeadSettingsPart>();
+    headSettings.Elements = Cascade.Head.Helpers.SimpleSerializer.Deserialize(headSettings.RawElements);
+
     var cultureInfo = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
 
     string title = Convert.ToString(Model.Title);
     string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
 
-    IPageTitleService pageTitleService = new PageTitleService(WorkContext);
-    string PageTitle = pageTitleService.GetPageTitle();
+
+    IPageHeadService pageHeadService = new PageHeadService(WorkContext);
+    string PageTitle = pageHeadService.GetPageTitle();
+
+    string rawHeadElements = pageHeadService.GetRawHeadElements();
 
     Display.Resources();
 }
@@ -31,6 +40,10 @@
 
     @Display(Model.Head)
 
+    @foreach (var element in headSettings.Elements)
+    {
+
+    }
     <script type="text/javascript">
         (function (d) { d.className = "dyn" + d.className.substring(6, d.className.length); })(document.documentElement);
     </script>

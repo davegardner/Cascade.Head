@@ -3,7 +3,11 @@ using Cascade.Head.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.UI.Resources;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 
 namespace Cascade.Head.Services
 {
@@ -15,6 +19,7 @@ namespace Cascade.Head.Services
         void Unpublish(int id);
         HeadPart GetHead(int id);
         void SynchronizeElements(HeadPart contentItem, HeadVM vm);
+        void WriteElements(IEnumerable<HeadElementRecord> elements);
     }
 
 
@@ -24,9 +29,11 @@ namespace Cascade.Head.Services
     {
         private readonly IOrchardServices _services;
         private readonly IRepository<HeadElementRecord> _elementsRepository;
+        private readonly IWorkContextAccessor _wca;
 
-        public HeadServices(IOrchardServices service, IRepository<HeadElementRecord> elementsRepo)
+        public HeadServices(IOrchardServices service, IRepository<HeadElementRecord> elementsRepo, IWorkContextAccessor wca)
         {
+            _wca = wca;
             _elementsRepository = elementsRepo;
             _services = service;
 
@@ -95,6 +102,61 @@ namespace Cascade.Head.Services
                     _elementsRepository.Create(CreateElement(part, newElement));
                 else
                     _elementsRepository.Update(UpdateElement(existingElements.First(e=>e.Id == newElement.Id), newElement));
+        }
+
+        public void WriteElements(IEnumerable<HeadElementRecord> elements)
+        {
+            var resourceManager = _wca.GetContext().Resolve<IResourceManager>();
+           
+            foreach (var element in elements)
+            {
+                switch (element.Type.ToLower())
+                {
+                    case "title":
+                        HttpContext.Current.Cache.Insert("Cascade.Head.PageTitle", element.Content ?? "");
+                        break;
+                    case "name":
+                        resourceManager.SetMeta(new MetaEntry
+                        {
+                            Name = element.Name,
+                            Content = element.Content,
+
+                        });
+                        break;
+                    case "http-equiv":
+                        resourceManager.SetMeta(new MetaEntry
+                        {
+                            HttpEquiv = element.Name,
+                            Content = element.Content
+                        });
+                        break;
+                    case "charset":
+                        resourceManager.SetMeta(new MetaEntry
+                        {
+                            Charset = element.Content
+                        });
+                        break;
+                    case "link":
+                        resourceManager.RegisterLink(new LinkEntry
+                        {
+                            Rel = element.Name,
+                            Type = GetType(element.Content),
+                            Href = element.Content
+                        });
+                        break;
+                }
+            }
+        }
+        private string GetType(string content)
+        {
+            // Approximation that will work for common extensions png and ico
+            string type = "image";
+            var ext = Path.GetExtension(content);
+            if (!string.IsNullOrEmpty(ext))
+            {
+                type += "/" + ext.TrimStart('.');
+            }
+            return type;
         }
     }
 }
