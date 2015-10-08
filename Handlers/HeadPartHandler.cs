@@ -1,30 +1,35 @@
-﻿using Cascade.Head.Models;
+﻿using Cascade.Head.Helpers;
+using Cascade.Head.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using System.Linq;
 
 namespace Cascade.Head.Handlers
 {
     public class HeadPartHandler : ContentHandler
     {
-        public HeadPartHandler(IRepository<HeadPartRecord> headRepository, IRepository<HeadElementRecord> elementsRepository, IContentManager contentManager)
+        public HeadPartHandler(IRepository<HeadPartRecord> headRepository, IContentManager contentManager)
         {
             Filters.Add(StorageFilter.For(headRepository));
 
-            OnLoading<HeadPart>((context, head) =>
+            OnLoaded<HeadPart>((context, part) =>
             {
-                head.Record.HeadElementRecords = elementsRepository.Fetch(e=>e.HeadPartRecord.Id == head.Id).ToList();
+                if (part == null)
+                    return;
+
+                // Deserialize Elements
+                part.Elements = HeadElementSerializer.Deserialize(part.RawElements);
+
             });
 
-            OnRemoving<HeadPart>((context, head) =>
+            OnUpdated<HeadPart>((context, part) =>
             {
-                foreach (var element in elementsRepository.Fetch(e=>e.HeadPartRecord.Id == head.Id).ToList())
-                {
-                    elementsRepository.Delete(element);
-                }
-            });
+                if (part == null)
+                    return;
 
+                // Serialize Elements
+                part.RawElements = HeadElementSerializer.Serialize(part.Elements);
+            });
         }
     }
 }

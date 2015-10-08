@@ -4,6 +4,7 @@ using Cascade.Head.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
+using System.Linq;
 
 namespace Cascade.Head.Handlers
 {
@@ -27,7 +28,7 @@ namespace Cascade.Head.Handlers
                     return;
 
                 // Deserialize 
-                part.Elements = SimpleSerializer.Deserialize(part.RawElements);
+                part.Elements = HeadElementSerializer.Deserialize(part.RawElements);
 
             });
 
@@ -36,8 +37,11 @@ namespace Cascade.Head.Handlers
                 if (part == null)
                     return;
 
+                // eliminate deleted elements
+                part.Elements = part.Elements.Where(e => e.Deleted != true).ToList();
+
                 // Serialize
-                part.RawElements = SimpleSerializer.Serialize(part.Elements);
+                part.RawElements = HeadElementSerializer.Serialize(part.Elements);
             });
 
         }

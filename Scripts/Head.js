@@ -8,6 +8,7 @@
 	var index = 0;
 
 	var setLabels = function () {
+
 		// adjust the label to match the type
 		var label = $('#heType option:selected').text();
 		$('#NameOrHttpEquivLabel').text(label);
@@ -45,9 +46,6 @@
 
 	$('#heType').on('change', setLabels);
 
-	//$(window).load(setLabels);
-
-
 	// Copy users selection to the Name Input element
 	// Emulates a dropdown that also allows a user to enter a freeform value
 	$('.modal-body').click(function (ev) {
@@ -58,7 +56,6 @@
 	$('#createHeadElement').on('click', function () {
 		// initialize
 		currentRow = null;
-		$('#myModal input[name="id"]').val(0);
 		$('#heType').val('name');
 		$('#heName').val('');
 		// enable input
@@ -75,11 +72,9 @@
 		index = $('#elementTable tbody tr').index(currentRow);
 		var cells = currentRow[0].children;
 
-		var id = cells[0].innerText;
 		var type = cells[1].innerText;
 		var name = cells[2].innerText;
 		var content = cells[3].innerText;
-		$('#myModal input[name="id"]').val(id);
 		$('#heType').val(type);
 		$('#heName').val(name);
 		$('#myModal input[name="content"]').val(content);
@@ -121,12 +116,6 @@
 			currentRow.empty();
 		}
 
-		var id = $('#myModal input[name="id"]').val() | "0";
-		id += '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Id" value="' + id + '" />'
-
-		var headId = $('#Head_Id').val() | "0";
-		headId = '<input type="hidden" name="' + fieldNameBase + '[' + index + '].HeadPartRecord_Id" value="' + headId + '" />'
-
 		var type = $('#heType').val();
 		type += '<input type="hidden" name="' + fieldNameBase + '[' + index + '].Type" value="' + type + '" />'
 
@@ -141,7 +130,7 @@
 
 		var actions = '<a href="#" class="elementEdit" >Edit</a> | <a href="#" class="elementDelete" >Delete</a>';
 
-		currentRow.append("<td class='hidden'>" + id + headId + deleted + "</td><td>" + type + "</td><td>" + name + "</td><td>" + content + "</td><td>" + actions + "</td>");
+		currentRow.append("<td class='hidden'>"  + deleted + "</td><td>" + type + "</td><td>" + name + "</td><td>" + content + "</td><td>" + actions + "</td>");
 		$('#myModal input').attr('disabled', true);
 		$('#myModal').modal('hide');
 	}

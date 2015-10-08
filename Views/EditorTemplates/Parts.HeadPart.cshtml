@@ -7,10 +7,6 @@
     Script.Require("Bootstrap");
     Script.Require("Head");
 
-    //RegisterLink(new Orchard.UI.Resources.LinkEntry { Rel = "import", Href = Url.Content("~/Modules/Cascade.Head/Contents/Components/cascade-editable-dropdown.html") });
-    //RegisterLink(new Orchard.UI.Resources.LinkEntry { Rel = "import", Href = Url.Content("~/Modules/Cascade.Head/Contents/bower_components/iron-dropdown/iron-dropdown.html") });
-    //RegisterLink(new Orchard.UI.Resources.LinkEntry { Rel = "import", Href = Url.Content("~/Modules/Cascade.Head/Contents/bower_components/paper-button/paper-button.html") });
-
     var elements = Model.Elements;
 
     var fieldNameBase = Html.FieldNameFor(m => Model.Elements);
@@ -120,10 +116,7 @@
                     var element = elements[index];
                     <tr>
                         <td class="hidden">
-                            <!--entry.Id-->
-                            @element.Id
-                            <input type="hidden" name="@(fieldNameBase)[@index].Id" value="@element.Id" />
-                            <input type="hidden" name="@(fieldNameBase)[@index].HeadPartRecord_Id" value="@element.HeadPartRecord_Id" />
+                            <!--entry.Deleted -->
                             <input type="hidden" name="@(fieldNameBase)[@index].Deleted" value="false" />
                         </td>
                         <td>

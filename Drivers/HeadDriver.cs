@@ -1,16 +1,13 @@
-﻿using Cascade.Head.Models;
+﻿using Cascade.Head.Helpers;
+using Cascade.Head.Models;
 using Cascade.Head.Services;
 using Cascade.Head.Settings;
 using Cascade.Head.ViewModels;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.UI.Resources;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace Cascade.Head.Drivers
 {
@@ -21,15 +18,12 @@ namespace Cascade.Head.Drivers
 
         private readonly IHeadServices _headServices;
         private readonly IContentManager _contentManager;
-        //private readonly IWorkContextAccessor _wca;
 
         public HeadPartDriver(
             IHeadServices commentService,
-            IContentManager contentManager //,
-            //IWorkContextAccessor wca
+            IContentManager contentManager
             )
         {
-            //_wca = wca;
             _headServices = commentService;
             _contentManager = contentManager;
         }
@@ -38,23 +32,27 @@ namespace Cascade.Head.Drivers
 
         protected override DriverResult Display(HeadPart part, string displayType, dynamic shapeHelper)
         {
-            if (displayType != "Detail") return null;
-            //var resourceManager = _wca.GetContext().Resolve<IResourceManager>();
-
-            // Merge content-level elements with type-level elements
-            var allElements = new List<HeadElementRecord>(part.Elements);
-            
-            if (part == null || part.Settings == null)
+            // Don't insert elements unless it's a detail display
+            if (displayType != "Detail") 
                 return null;
 
-            // The commented-out line below is how you're supposed to do it, but it did not work for me
-            // so I access the settings collection directly instead.
-            //var typeSettings = part.Settings.GetModel<HeadTypePartSettings>();
-            var raw = part.Settings["HeadTypePartSettings.RawElements"];
-            var typeSettings = new HeadTypePartSettings { RawElements = raw };
+            // Get content-level elements
+            var allElements = new List<Element>(part.Elements);
 
-            var typeElements = typeSettings.Elements.Select(e => new HeadElementRecord { Type = e.Type, Content = e.Content, Name = e.Name });
-            allElements.AddRange(typeElements);
+            // Merge with type-level elements (if any)
+            if (part != null && part.Settings != null)
+            {
+                // The commented-out line below is how you're supposed to do it, but it did not work for me
+                // so I access the settings collection directly instead.
+                //var typeSettings = part.Settings.GetModel<HeadTypePartSettings>();
+                var raw = part.Settings["HeadTypePartSettings.RawElements"];
+                var typeSettings = new HeadTypePartSettings
+                {
+                    RawElements = raw,
+                    Elements = HeadElementSerializer.Deserialize(raw)
+                };
+                allElements.AddRange(typeSettings.Elements);
+            }
 
             _headServices.WriteElements(allElements);
             
@@ -69,7 +67,7 @@ namespace Cascade.Head.Drivers
                 AvailableTypes = availableTypes
             };
 
-            head.Elements = part.Elements.Select(e => new ElementVM { Id = e.Id, Deleted = false, Content = e.Content, Type = e.Type, Name = e.Name, HeadPartRecord_Id = e.HeadPartRecord.Id }).ToList();
+            head.Elements = part.Elements;
 
             return ContentShape("Parts_HeadPart", () =>
             {
@@ -85,8 +83,8 @@ namespace Cascade.Head.Drivers
             // eliminate deleted elements
             head.Elements = head.Elements.Where(e => e.Deleted != true).ToList();
 
-            if (part.Id != 0)
-                _headServices.SynchronizeElements(part, head);
+            // update the part
+            part.Elements = head.Elements;
 
             return ContentShape("Parts_HeadPart", () =>
             {
@@ -98,12 +96,12 @@ namespace Cascade.Head.Drivers
         
         protected override void Importing(HeadPart part, ImportContentContext context)
         {
-
+            // TODO
         }
 
         protected override void Exporting(HeadPart part, ExportContentContext context)
         {
-
+            // TODO
         }
     }
 }

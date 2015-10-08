@@ -29,8 +29,8 @@ namespace Cascade.Head.Services
 
             // display elements from the site settings
             var headElementSettings = _wca.GetContext().CurrentSite.As<HeadSettingsPart>();
-            headElementSettings.Elements = SimpleSerializer.Deserialize(headElementSettings.RawElements);
-            var allElements = headElementSettings.Elements.Select(e => new HeadElementRecord { Type = e.Type, Content = e.Content, Name = e.Name });
+            headElementSettings.Elements = HeadElementSerializer.Deserialize(headElementSettings.RawElements);
+            var allElements = headElementSettings.Elements.Select(e => new Element { Type = e.Type, Content = e.Content, Name = e.Name });
             _headServices.WriteElements(allElements);
         }
 

@@ -97,7 +97,7 @@
             </caption>
             <thead>
                 <tr>
-                    <th class="hidden" scope="col">@T("Id")</th>
+                    @*<th class="hidden" scope="col">@T("Id")</th>*@
                     <th scope="col">@T("Type")</th>
                     <th scope="col">@T("Name")</th>
                     <th scope="col">@T("Content")</th>
@@ -111,10 +111,7 @@
                     <tr>
 
                         <td class="hidden">
-                            @*@element.Id
-                            *@
-                            <input type="hidden" name="@(fieldNameBase)[@index].Id" value="@element.Id" />
-                            <input type="hidden" name="@(fieldNameBase)[@index].HeadPartRecord_Id" value="@element.HeadPartRecord_Id" /> 
+                            <!--entry.Deleted-->
                             <input type="hidden" name="@(fieldNameBase)[@index].Deleted" value="false" />
                         </td>
 

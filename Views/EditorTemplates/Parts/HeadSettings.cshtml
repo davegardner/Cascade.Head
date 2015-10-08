@@ -116,10 +116,7 @@
                     var element = elements[index];
                     <tr>
                         <td class="hidden">
-                            <!--entry.Id-->
-                            @element.Id
-                            <input type="hidden" name="@(fieldNameBase)[@index].Id" value="@element.Id" />
-                            <input type="hidden" name="@(fieldNameBase)[@index].HeadPartRecord_Id" value="@element.HeadPartRecord_Id" />
+                            <!--entry.Deleted-->
                             <input type="hidden" name="@(fieldNameBase)[@index].Deleted" value="false" />
                         </td>
                         <td>

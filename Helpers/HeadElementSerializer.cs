@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Cascade.Head.Helpers
 {
-    public static class SimpleSerializer
+    public static class HeadElementSerializer
     {
         private const char FieldBreak = '\t';
         private const char RecordBreak = '\r';
@@ -34,8 +34,6 @@ namespace Cascade.Head.Helpers
                     var fields = line.Split(FieldBreak);
                     Element element = new Element
                     {
-                        Id = 0,
-                        HeadPartRecord_Id = 0,
                         Deleted = false,
                         Type = fields[0],
                         Name = fields[1],

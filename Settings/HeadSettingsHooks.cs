@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using Cascade.Head.Helpers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Cascade.Head.Settings
             try
             {
                 model.RawElements = definition.Settings["HeadTypePartSettings.RawElements"];
+                model.Elements = HeadElementSerializer.Deserialize(model.RawElements);
             }
             catch { }
 
@@ -37,6 +39,7 @@ namespace Cascade.Head.Settings
             updateModel.TryUpdateModel(model, "HeadTypePartSettings", null, new string[] { "RawElements" });
 
             model.Elements = model.Elements.Where(e => !e.Deleted).ToList();
+            model.RawElements = HeadElementSerializer.Serialize(model.Elements);
 
             builder.WithSetting("HeadTypePartSettings.RawElements", model.RawElements);
 

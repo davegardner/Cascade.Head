@@ -67,20 +67,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\angular-animate.js" />
-    <Content Include="Scripts\angular-animate.min.js" />
-    <Content Include="Scripts\angular-resource.js" />
-    <Content Include="Scripts\angular.js" />
-    <Content Include="Scripts\angular.min.js">
-      <DependentUpon>angular.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Head.js" />
-    <Content Include="Scripts\HeadApp.js" />
-    <Content Include="Scripts\HeadService.js" />
-    <Content Include="Scripts\ui-bootstrap-tpls-0.13.3.js" />
-    <Content Include="Scripts\ui-bootstrap-tpls-0.13.3.min.js" />
     <Content Include="Styles\Head.css">
       <DependentUpon>Head.less</DependentUpon>
     </Content>
@@ -115,12 +104,16 @@
   <ItemGroup>
     <Compile Include="Drivers\HeadDriver.cs" />
     <Compile Include="Handlers\HeadPartHandler.cs" />
+    <Compile Include="Handlers\HeadSettingsPartHandler.cs" />
+    <Compile Include="Helpers\HeadElementSerializer.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\HeadElementPart.cs">
+    <Compile Include="Models\Element.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\HeadPart.cs" />
+    <Compile Include="Models\HeadSettingsPart.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\HeadInjectorService.cs" />
     <Compile Include="Services\HeadServices.cs" />
     <Compile Include="Services\PageTitleService.cs" />
     <Compile Include="Settings\HeadSettingsHooks.cs" />
@@ -281,6 +274,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\HeadSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

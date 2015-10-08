@@ -5,27 +5,28 @@ using System.Collections.Generic;
 namespace Cascade.Head.Models
 {
     /// <summary>
-    /// Defines a collection of elements that will be added to the head tag
+    /// Defines a collection of elements on the Content Item that will be added to the head tag
     /// </summary>
     public class HeadPartRecord : ContentPartRecord
     {
-        public HeadPartRecord()
-        {
-            HeadElementRecords = new List<HeadElementRecord>();
-        }
-
-        public virtual IList<HeadElementRecord> HeadElementRecords { get; set; }
-
+        virtual public string RawElements { get; set;}
     }
 
     /// <summary>
-    /// Defines a collection of element parts that will be added to the head tag
+    /// Content Item Head Elements
     /// </summary>
-    public class HeadPart : ContentPart<HeadPartRecord>
+     public class HeadPart : ContentPart<HeadPartRecord>
     {
-        public IEnumerable<HeadElementRecord> Elements
+        public HeadPart()
         {
-            get { return Record.HeadElementRecords; }
+            Elements = new List<Element>();
+        }
+
+        public IList<Element> Elements { get; set; }
+        public string RawElements
+        {
+            get { return this.Retrieve(x => x.RawElements); }
+            set { this.Store(x => x.RawElements, value); }
         }
     }
 }

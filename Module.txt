@@ -2,9 +2,9 @@
 AntiForgery: enabled
 Author: Cascade Pixels
 Website: http://cascadepixels.com.au
-Version: 1.0
+Version: 1.1
 OrchardVersion: 1.9
-Description: Define HTML head region elements such as meta and http-equiv tags
+Description: Define HTML head region elements such as meta and http-equiv tags. Three scopes are supported: site, content type, and content.
 Features:
     Cascade.Head:
         Description: Define HTML head region elements such as meta and http-equiv tags

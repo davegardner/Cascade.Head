@@ -9,19 +9,11 @@ namespace Cascade.Head
     {
         public int Create()
         {
-            SchemaBuilder.CreateTable("HeadElementRecord",
-                table => table
-                    .Column<int>("Id", c=>c.PrimaryKey().Identity())
-                    .Column<int>("HeadPartRecord_Id")
-                    .Column<string>("Type")
-                    .Column<string>("Name")
-                    .Column<string>("Content", c => c.Unlimited())
-                );
-
             // Groups a collection of elements together
             SchemaBuilder.CreateTable("HeadPartRecord",
                 table => table
                     .ContentPartRecord()
+                    .Column<string>("RawElements")
                 );
 
             // Create a Head content type 
@@ -39,7 +31,7 @@ namespace Cascade.Head
 
             ContentDefinitionManager.AlterPartDefinition("HeadPart", builder => builder
                .Attachable()
-               .WithDescription("Allows content items to have HTML metadata tags attached."));
+               .WithDescription("Enables content items to have HTML metadata tags attached."));
 
 
             return 1;
@@ -47,11 +39,6 @@ namespace Cascade.Head
 
         //public int UpdateFrom1()
         //{
-        //    ContentDefinitionManager.AlterTypeDefinition("HeadElement",
-        //       cfg => cfg
-        //           .WithPart("HeadElementPart")
-        //           .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
-        //        );
         //    return 2;
         //}
     }
