@@ -956,6 +956,9 @@
 #metaElementsNs .green {
   color: #809f43;
 }
+#metaElementsNs a {
+  color: #fff;
+}
 #metaElementsNs .selection {
   cursor: pointer;
   color: #809f43;
