@@ -13,20 +13,18 @@ namespace Cascade.Head
             SchemaBuilder.CreateTable("HeadPartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("RawElements")
+                    .Column<string>("RawElements", c => c.Unlimited())
                 );
 
             // Create a Head content type 
             ContentDefinitionManager.AlterTypeDefinition("Head", cfg => cfg
                 .WithPart("HeadPart")
-                .WithPart("CommonPart")
             );
 
             // Create a new widget content type 
             ContentDefinitionManager.AlterTypeDefinition("HeadWidget", cfg => cfg
                 .WithPart("HeadPart")
                 .WithPart("WidgetPart")
-                .WithPart("CommonPart")
                 .WithSetting("Stereotype", "Widget"));
 
             ContentDefinitionManager.AlterPartDefinition("HeadPart", builder => builder
@@ -34,12 +32,44 @@ namespace Cascade.Head
                .WithDescription("Enables content items to have HTML metadata tags attached."));
 
 
-            return 1;
+            return 3;
         }
 
-        //public int UpdateFrom1()
-        //{
-        //    return 2;
-        //}
+        public int UpdateFrom1()
+        {
+            ContentDefinitionManager.AlterTypeDefinition("Head", cfg => cfg
+                .RemovePart("CommonPart")
+                );
+            ContentDefinitionManager.AlterTypeDefinition("HeadWidget", cfg => cfg
+                .RemovePart("CommonPart")
+                );
+            return 2;
+        }
+
+        public int UpdateFrom2()
+        {
+            // Needed because I omitted a migration earlier so I am dropping
+            // the table completely rather than trying to repair it.
+
+            SchemaBuilder.DropTable("HeadPartRecord");
+            
+            try
+            {
+                SchemaBuilder.DropTable("HeadElementRecord");
+            }
+            catch
+            {
+                // ignore table does not exist error
+            }
+
+            SchemaBuilder.CreateTable("HeadPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("RawElements", c => c.Unlimited())
+                );
+
+            return 3;
+        }
+
     }
 }

@@ -956,7 +956,7 @@
 #metaElementsNs .green {
   color: #809f43;
 }
-#metaElementsNs a {
+#metaElementsNs a.button {
   color: #fff;
 }
 #metaElementsNs .selection {
