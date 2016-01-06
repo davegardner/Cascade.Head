@@ -96,12 +96,21 @@ namespace Cascade.Head.Drivers
         
         protected override void Importing(HeadPart part, ImportContentContext context)
         {
-            // TODO
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null)
+            {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "RawElements", rawElements =>
+                part.RawElements = rawElements
+            );
         }
 
         protected override void Exporting(HeadPart part, ExportContentContext context)
         {
-            // TODO
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RawElements", part.Record.RawElements);
+
         }
     }
 }
