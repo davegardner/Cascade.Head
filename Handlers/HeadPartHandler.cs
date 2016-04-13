@@ -1,7 +1,7 @@
 ﻿using Cascade.Head.Helpers;
 using Cascade.Head.Models;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Data;
 
 namespace Cascade.Head.Handlers
